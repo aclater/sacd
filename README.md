@@ -5,7 +5,7 @@ clean-room Rust library built only from it, and the tools that use it. This repo
 map: what each project is for, how they fit together, where things stand and why the big
 decisions were made. It holds no code.
 
-**Board:** [SACD projects](https://github.com/users/aclater/projects) (open issues and PRs of all
+**Board:** [SACD projects](https://github.com/users/aclater/projects/1) (open issues and PRs of all
 five repositories in one view).
 
 ## The projects
