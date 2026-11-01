@@ -1,5 +1,9 @@
 # SACD projects
 
+> **Clean-room note:** this repository is outside the clean room. scarletbook-rs agents must not
+> read it or follow its links; the clean side gets requirements only through scarletbook-rs
+> issues. (An owner-directed read on 2026-11-01 is recorded in scarletbook-rs#155.)
+
 Open tools for reading Super Audio CD disc images: a specification written from scratch, a
 clean-room Rust library built only from it, and the tools that use it. This repository is the
 map: what each project is for, how they fit together, where things stand and why the big
