@@ -1,5 +1,9 @@
 # Decisions
 
+> **Clean-room note:** this repository is outside the clean room. scarletbook-rs agents must not
+> read it or follow its links; the clean side gets requirements only through scarletbook-rs
+> issues. (An owner-directed read on 2026-11-01 is recorded in scarletbook-rs#155.)
+
 One line per major decision, with why and a link to where it is recorded in full. Newest
 first.
 
