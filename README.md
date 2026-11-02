@@ -77,6 +77,11 @@ Full figures: [sacd-spec benchmarks](https://github.com/aclater/sacd-spec/blob/m
 4. **pysacd on scarletbook:** pysacd switches its engine to scarletbook through the C ABI.
 5. **Releases** of sacdfs, and of pysacd on the new engine.
 
+## Quality
+
+Every check the projects run against bugs, regressions, leaks, supply-chain problems and bad
+releases, with links to where each is implemented, and the known gaps: [QUALITY.md](QUALITY.md).
+
 ## Releases
 
 What each minor version line brought, per project, newest first: [RELEASES.md](RELEASES.md).
