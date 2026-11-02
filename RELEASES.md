@@ -22,8 +22,7 @@ RELEASES.md".
 
 ### In progress: 0.4.0
 
-Milestone 0.4.0: the remaining memory work (#73) and cover.jpg for MPD (#148). No unreleased
-entries yet.
+Milestone 0.4.0: cover.jpg for MPD (#148). No unreleased entries yet.
 
 ### 0.3 line
 
