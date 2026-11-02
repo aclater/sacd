@@ -11,7 +11,7 @@ its GitHub releases and its milestones; for any detail, they win. Newest first. 
 | Project | Latest release | In progress |
 |---|---|---|
 | [sacdfs](#sacdfs) | 0.3.0 (2026-11-02) | 0.4.0 |
-| [pysacd](#pysacd) | 0.4.2 (2026-11-02) | 0.5.0 |
+| [pysacd](#pysacd) | 0.4.3 (2026-11-02) | 0.5.0 |
 | [beets-pysacd](#beets-pysacd) | 0.2.0 (2026-11-02) | nothing recorded |
 | [scarletbook-rs](#scarletbook-rs) | 0.5.6 (2026-11-02) | 0.6.0, then 1.0.0 |
 
@@ -104,6 +104,9 @@ pysacd-extract on scarletbook's writers.
 - 0.4.2: DSF audio laid out by scarletbook-rs 0.5.6's layout fill (pysacd's own block layout
   deleted); plain DSD to DSF 2.1 times faster on NVMe, DST about 1.5 % faster, output
   byte-identical ([#114](https://github.com/aclater/pysacd/issues/114)).
+- 0.4.3: links scarletbook-rs 0.5.7, winning back 0.5.6's one-thread DST stereo regression
+  (DST stereo to DSF on one thread 32.94 s against 33.50 in 0.4.2), output byte-identical
+  ([#119](https://github.com/aclater/pysacd/pull/119)).
 - Workaround for early Sony discs whose last area frame is missing: filled with silence, warns,
   exits 0 instead of 1.
 - Behaviour change: a file scarletbook won't lay out from a hostile or damaged TOC is reported
@@ -111,7 +114,8 @@ pysacd-extract on scarletbook's writers.
 
 Releases: [0.4.0](https://github.com/aclater/pysacd/releases/tag/v0.4.0) (2026-11-01),
 [0.4.1](https://github.com/aclater/pysacd/releases/tag/v0.4.1) (2026-11-02),
-[0.4.2](https://github.com/aclater/pysacd/releases/tag/v0.4.2) (2026-11-02).
+[0.4.2](https://github.com/aclater/pysacd/releases/tag/v0.4.2) (2026-11-02),
+[0.4.3](https://github.com/aclater/pysacd/releases/tag/v0.4.3) (2026-11-02).
 
 ### 0.3 line
 
