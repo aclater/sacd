@@ -393,16 +393,21 @@ What isn't covered yet, from open issues and from the checks above:
   in progress ([#151](https://github.com/aclater/sacdfs/issues/151), draft PR
   [#152](https://github.com/aclater/sacdfs/pull/152)). A known leak is open: nodes of removed or
   renamed images stay in the tree ([#153](https://github.com/aclater/sacdfs/issues/153), P1).
-- **No valgrind/memcheck** run in any project yet; sacdfs's PR #152 plans one.
+- **No valgrind/memcheck** run in any project yet; sacdfs's PR #152 plans one, and
+  [pysacd#122](https://github.com/aclater/pysacd/issues/122) adds one for the C engine.
 - **pysacd leak detection:** the ASan job runs with `detect_leaks=0`
   ([ci.yml](https://github.com/aclater/pysacd/blob/master/.github/workflows/ci.yml)), so leaks in
-  the C engine are not checked in CI.
+  the C engine are not checked in CI ([pysacd#122](https://github.com/aclater/pysacd/issues/122)).
 - **sacdfs fuzzing:** sacdfs has no fuzz target of its own; it relies on scarletbook's fuzzing
-  and on the 103 malformed corpus cases.
+  and on the 103 malformed corpus cases ([sacdfs#161](https://github.com/aclater/sacdfs/issues/161)).
 - **Merging on current main is not enforced:** no ruleset requires a branch to be up to date
-  before merging, so a pull request that was green against an older `main` can still merge.
+  before merging, so a pull request that was green against an older `main` can still merge
+  ([#37](https://github.com/aclater/sacd/issues/37); requested of scarletbook-rs in
+  [scarletbook-rs#252](https://github.com/aclater/scarletbook-rs/issues/252)).
 - **Benchmark regressions** are caught in CI only for scarletbook, and there only as an
-  informational check. The other projects compare timings by hand.
+  informational check. The other projects compare timings by hand
+  ([sacdfs#162](https://github.com/aclater/sacdfs/issues/162),
+  [pysacd#123](https://github.com/aclater/pysacd/issues/123)).
 - **pysacd's PS3 client** is untested on real hardware
   ([pysacd#10](https://github.com/aclater/pysacd/issues/10)).
 - **scarletbook-rs before 1.0** (its own public issues): interface stability for integration
