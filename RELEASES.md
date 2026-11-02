@@ -10,7 +10,7 @@ its GitHub releases and its milestones; for any detail, they win. Newest first. 
 
 | Project | Latest release | In progress |
 |---|---|---|
-| [sacdfs](#sacdfs) | 0.2.0 (2026-11-02) | 0.3.0 (0.3.0-rc.1 out) |
+| [sacdfs](#sacdfs) | 0.3.0 (2026-11-02) | 0.4.0 |
 | [pysacd](#pysacd) | 0.4.2 (2026-11-02) | 0.5.0 |
 | [beets-pysacd](#beets-pysacd) | 0.2.0 (2026-11-02) | nothing recorded |
 | [scarletbook-rs](#scarletbook-rs) | 0.5.6 (2026-11-02) | 0.6.0, then 1.0.0 |
@@ -20,9 +20,12 @@ RELEASES.md".
 
 ## sacdfs
 
-### In progress: 0.3.0
+### In progress: 0.4.0
 
-Release candidate: [0.3.0-rc.1](https://github.com/aclater/sacdfs/releases/tag/v0.3.0-rc.1) (2026-11-02).
+Milestone 0.4.0: the remaining memory work (#73) and cover.jpg for MPD (#148). No unreleased
+entries yet.
+
+### 0.3 line
 
 Milestone: robustness (stalls, lost mounts), the tag layer, remaining scarletbook adoption,
 performance follow-ups. From `CHANGELOG.md` [Unreleased]:
@@ -44,6 +47,9 @@ performance follow-ups. From `CHANGELOG.md` [Unreleased]:
 - **Stall handling** is in the milestone's scope (stall #72 and stalled-share #63 are closed
   issues in it); it is not yet described in the changelog.
 - Docs: how to make Plex show a multichannel copy as its own album (#138).
+
+Releases: [0.3.0](https://github.com/aclater/sacdfs/releases/tag/v0.3.0) (2026-11-02), after
+[0.3.0-rc.1](https://github.com/aclater/sacdfs/releases/tag/v0.3.0-rc.1).
 
 ### 0.2 line
 
