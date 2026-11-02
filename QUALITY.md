@@ -175,9 +175,10 @@ and the required behaviour for each, so all readers reject the same images the s
 | AddressSanitizer + UBSan | – | [✓](https://github.com/aclater/pysacd/blob/master/.github/workflows/ci.yml) | – | – | – |
 | ThreadSanitizer | – | [✓](https://github.com/aclater/pysacd/blob/master/.github/workflows/ci.yml) | – | – | – |
 | Miri (undefined behaviour in Rust) | – | – | – | [✓](https://github.com/aclater/scarletbook-rs/blob/main/.github/workflows/miri.yml) | – |
-| LeakSanitizer | in progress ([#151](https://github.com/aclater/sacdfs/issues/151)) | – | – | [✓](https://github.com/aclater/scarletbook-rs/blob/main/.github/workflows/ci.yml) C interface | – |
-| No-growth test in CI | in progress ([#151](https://github.com/aclater/sacdfs/issues/151)) | – | – | [✓](https://github.com/aclater/scarletbook-rs/blob/main/CONTRIBUTING.md) | – |
-| Memory soak | in progress ([#151](https://github.com/aclater/sacdfs/issues/151)) | – | – | [✓](https://github.com/aclater/scarletbook-rs/blob/main/.github/workflows/soak.yml) 1 h weekly | – |
+| LeakSanitizer | – | – | – | [✓](https://github.com/aclater/scarletbook-rs/blob/main/.github/workflows/ci.yml) C interface | – |
+| No-growth test in CI | [✓](https://github.com/aclater/sacdfs/blob/main/tests/no_growth.rs) | – | – | [✓](https://github.com/aclater/scarletbook-rs/blob/main/CONTRIBUTING.md) | – |
+| Memory soak | [✓](https://github.com/aclater/sacdfs/blob/main/.github/workflows/leaks.yml) 20 min weekly; 2 h on real discs before releases | – | – | [✓](https://github.com/aclater/scarletbook-rs/blob/main/.github/workflows/soak.yml) 1 h weekly | – |
+| Valgrind memcheck | [✓](https://github.com/aclater/sacdfs/blob/main/.github/workflows/leaks.yml) test suite, weekly | – | – | – | – |
 
 - **pysacd** runs its whole test suite, hostile images included, with the C engine built under
   ASan and UBSan, and again under TSan to catch data races in the multithreaded engine. Both are
@@ -189,12 +190,24 @@ and the required behaviour for each, so all readers reject the same images the s
   ([CONTRIBUTING.md](https://github.com/aclater/scarletbook-rs/blob/main/CONTRIBUTING.md)).
   `unsafe` is confined to the C interface crate and one run-time dispatch module per library
   crate, and a test checks that each unsafe call there has its own `SAFETY:` comment.
-- **sacdfs:** leak hunting is in progress: a soak test with churn, heap profiling,
-  LeakSanitizer and memcheck runs, and a no-growth CI test
-  ([#151](https://github.com/aclater/sacdfs/issues/151), draft PR
-  [#152](https://github.com/aclater/sacdfs/pull/152)). Peak memory is already measured and
-  published with each performance round
-  ([docs/performance.md](https://github.com/aclater/sacdfs/blob/main/docs/performance.md)).
+- **sacdfs** checks for leaks at three levels ([docs/development.md](https://github.com/aclater/sacdfs/blob/main/docs/development.md)):
+  - **Every pull request:** a no-growth test ([tests/no_growth.rs](https://github.com/aclater/sacdfs/blob/main/tests/no_growth.rs)) fails if
+    the heap grows over repeated open, read and close cycles, along with regression tests for each
+    leak found so far: removed or renamed images and their seek-index entries are freed
+    ([tests/removed_images.rs](https://github.com/aclater/sacdfs/blob/main/tests/removed_images.rs),
+    [tests/removed_images_index.rs](https://github.com/aclater/sacdfs/blob/main/tests/removed_images_index.rs)), and a worker pool's spare
+    threads end.
+  - **Every week:** the test suite under valgrind memcheck and a 20-minute soak on the test
+    corpus ([leaks.yml](https://github.com/aclater/sacdfs/blob/main/.github/workflows/leaks.yml)).
+  - **Before a release:** a 2-hour soak on real disc images ([scripts/soak.py](https://github.com/aclater/sacdfs/blob/main/scripts/soak.py)).
+    Albums are added and removed under new names while files are read, stalls are forced and the
+    filesystem is remounted. The soak fails unless resident memory levels off. For 0.4.0 it found
+    three leaks that the small test images could not show
+    ([#153](https://github.com/aclater/sacdfs/issues/153),
+    [#167](https://github.com/aclater/sacdfs/issues/167),
+    [#169](https://github.com/aclater/sacdfs/pull/169)), and passed after their fixes.
+  - **Published memory:** peak memory is published with each performance round
+    ([docs/performance.md](https://github.com/aclater/sacdfs/blob/main/docs/performance.md)).
 
 ## Supply chain and code scanning
 
@@ -389,12 +402,10 @@ Common to the projects that publish packages; each step links to where it is imp
 
 What isn't covered yet, from open issues and from the checks above:
 
-- **sacdfs memory leaks:** no soak test, LeakSanitizer run or no-growth CI test yet. This is
-  in progress ([#151](https://github.com/aclater/sacdfs/issues/151), draft PR
-  [#152](https://github.com/aclater/sacdfs/pull/152)). A known leak is open: nodes of removed or
-  renamed images stay in the tree ([#153](https://github.com/aclater/sacdfs/issues/153), P1).
-- **No valgrind/memcheck** run in any project yet; sacdfs's PR #152 plans one, and
-  [pysacd#122](https://github.com/aclater/pysacd/issues/122) adds one for the C engine.
+- **pysacd C engine under valgrind:** sacdfs runs its test suite under valgrind memcheck every
+  week ([leaks.yml](https://github.com/aclater/sacdfs/blob/main/.github/workflows/leaks.yml)); the
+  same for pysacd's C engine is open
+  ([pysacd#122](https://github.com/aclater/pysacd/issues/122)).
 - **pysacd leak detection:** the ASan job runs with `detect_leaks=0`
   ([ci.yml](https://github.com/aclater/pysacd/blob/master/.github/workflows/ci.yml)), so leaks in
   the C engine are not checked in CI ([pysacd#122](https://github.com/aclater/pysacd/issues/122)).
