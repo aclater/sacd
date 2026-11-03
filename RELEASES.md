@@ -10,19 +10,55 @@ its GitHub releases and its milestones; for any detail, they win. Newest first. 
 
 | Project | Latest release | In progress |
 |---|---|---|
-| [sacdfs](#sacdfs) | 0.3.0 (2026-11-02) | 0.4.0 |
+| [sacdfs](#sacdfs) | 0.4.0 (2026-11-03) | 0.4.1 |
 | [pysacd](#pysacd) | 0.4.3 (2026-11-02) | 0.5.0 |
 | [beets-pysacd](#beets-pysacd) | 0.2.0 (2026-11-02) | nothing recorded |
-| [scarletbook-rs](#scarletbook-rs) | 0.5.6 (2026-11-02) | 0.6.0, then 1.0.0 |
+| [scarletbook-rs](#scarletbook-rs) | 0.5.7 (2026-11-02) | 0.6.0, then 1.0.0 |
 
 To keep this page current, each project's release checklist includes "update aclater/sacd
 RELEASES.md".
 
 ## sacdfs
 
-### In progress: 0.4.0
+### In progress: 0.4.1
 
-Milestone 0.4.0: cover.jpg for MPD (#148). No unreleased entries yet.
+Milestone 0.4.1: cover.jpg for MPD ([#148](https://github.com/aclater/sacdfs/issues/148)), sacdfs's
+own fuzz targets ([#161](https://github.com/aclater/sacdfs/issues/161)), an informational benchmark
+job ([#162](https://github.com/aclater/sacdfs/issues/162)) and a fairer soak thread check
+([#179](https://github.com/aclater/sacdfs/issues/179)).
+
+### 0.4 line
+
+Memory and leaks, and crates.io.
+
+- Lower memory: the default frame cache is 32 MiB, and fixed overhead is cut
+  ([#150](https://github.com/aclater/sacdfs/issues/150)). Peak memory of a full-library import
+  at the default cache was 616 MiB on 0.1.0 and is 61 MiB on 0.4.0. An import-like scan fell from
+  109 to 45 MiB against 0.3.0, and the first listing of a 200-image library is 55 % faster.
+- Leak hunting ([#151](https://github.com/aclater/sacdfs/issues/151)): a soak harness for real
+  discs, a no-growth test on every pull request, and a weekly memcheck and corpus soak. They found
+  and fixed three leaks that the small test images could not show:
+  - removed or renamed images stayed in the tree
+    ([#153](https://github.com/aclater/sacdfs/issues/153));
+  - the seek-index cache kept every disc ever opened
+    ([#169](https://github.com/aclater/sacdfs/pull/169));
+  - spare worker threads never ended ([#167](https://github.com/aclater/sacdfs/issues/167)).
+
+  A library with albums added and removed under new names grew about 94 MiB/h and now levels off
+  over 2 hours. An open file now keeps reading after its image is removed.
+- `ls -l` and `getfattr -d` over the container's NFS export no longer print "Unknown error 524"
+  ([#174](https://github.com/aclater/sacdfs/issues/174)). rc.4's first fix made Roon over SMB send
+  21,767 extended-attribute requests per rescan; rc.5 keeps that at 0.
+- scarletbook 0.5.7 from crates.io ([#157](https://github.com/aclater/sacdfs/pull/157)); sacdfs
+  itself is on crates.io from 0.4.0 (`cargo install --locked sacdfs`,
+  [#155](https://github.com/aclater/sacdfs/issues/155)).
+- A shorter README, with details moved to docs/
+  ([#159](https://github.com/aclater/sacdfs/issues/159)).
+
+Tested as five release candidates on a TrueNAS SCALE NAS with Roon and Plex, a Fedora NFS client
+with SELinux enforcing, five music servers and a 2-hour soak on real discs.
+
+Releases: [0.4.0](https://github.com/aclater/sacdfs/releases/tag/v0.4.0) (2026-11-03).
 
 ### 0.3 line
 
