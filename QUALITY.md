@@ -255,6 +255,7 @@ with no bypass actors:
 |---|---|---|---|---|---|---|
 | Default branch: changes only by pull request, no force-push, no deletion | [✓](https://github.com/aclater/sacdfs/rules) | [✓](https://github.com/aclater/pysacd/rules) | [✓](https://github.com/aclater/beets-pysacd/rules) | [✓](https://github.com/aclater/scarletbook-rs/rules) | [✓](https://github.com/aclater/sacd-spec/rules) | [✓](https://github.com/aclater/sacd/rules) |
 | Required status checks | [✓](https://github.com/aclater/sacdfs/rules) 11 | [✓](https://github.com/aclater/pysacd/rules) 13 | [✓](https://github.com/aclater/beets-pysacd/rules) 13 | [✓](https://github.com/aclater/scarletbook-rs/rules) 7 | – | – |
+| Branch must be up to date with the default branch before merging | [✓](https://github.com/aclater/sacdfs/rules) | [✓](https://github.com/aclater/pysacd/rules) | [✓](https://github.com/aclater/beets-pysacd/rules) | [✓](https://github.com/aclater/scarletbook-rs/rules) | – | – |
 | `v*` tags immutable (no update, deletion or force-push) | [✓](https://github.com/aclater/sacdfs/rules) | [✓](https://github.com/aclater/pysacd/rules) | [✓](https://github.com/aclater/beets-pysacd/rules) | [✓](https://github.com/aclater/scarletbook-rs/rules) | [✓](https://github.com/aclater/sacd-spec/rules) | [✓](https://github.com/aclater/sacd/rules) |
 
 - **The required checks** are, in sacdfs: fmt + clippy, tests, MSRV, cargo-deny, dependency
@@ -268,6 +269,11 @@ with no bypass actors:
   blocks the merge; slow, rarely-failing jobs run on the default branch, tags or a schedule
   instead ([sacdfs CONTRIBUTING.md](https://github.com/aclater/sacdfs/blob/main/CONTRIBUTING.md#ground-rules),
   [pysacd docs/development.md, "CI speed"](https://github.com/aclater/pysacd/blob/master/docs/development.md#ci-speed)).
+- **Up-to-date branches** are required wherever status checks are, so a pull request's green checks
+  always describe the code it merges into. A pull request that was green against an older default
+  branch once broke sacdfs. sacd-spec and this repository have no check that runs on every pull
+  request, so the rule has nothing to attach to there
+  ([#37](https://github.com/aclater/sacd/issues/37)).
 - **Immutable tags** mean a release that went wrong is followed by a new version, never moved
   ([sacdfs CONTRIBUTING.md, "Releasing"](https://github.com/aclater/sacdfs/blob/main/CONTRIBUTING.md#releasing)).
 - **sacd-spec** has no CI tests to require; its pull requests are merged by the owner after a
@@ -411,10 +417,6 @@ What isn't covered yet, from open issues and from the checks above:
   the C engine are not checked in CI ([pysacd#122](https://github.com/aclater/pysacd/issues/122)).
 - **sacdfs fuzzing:** sacdfs has no fuzz target of its own; it relies on scarletbook's fuzzing
   and on the 103 malformed corpus cases ([sacdfs#161](https://github.com/aclater/sacdfs/issues/161)).
-- **Merging on current main is not enforced:** no ruleset requires a branch to be up to date
-  before merging, so a pull request that was green against an older `main` can still merge
-  ([#37](https://github.com/aclater/sacd/issues/37); requested of scarletbook-rs in
-  [scarletbook-rs#252](https://github.com/aclater/scarletbook-rs/issues/252)).
 - **Benchmark regressions** are caught in CI only for scarletbook, and there only as an
   informational check. The other projects compare timings by hand
   ([sacdfs#162](https://github.com/aclater/sacdfs/issues/162),
