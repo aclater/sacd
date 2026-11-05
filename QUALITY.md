@@ -89,7 +89,7 @@ Short names for the repositories, used in the tables: **sacdfs**
 |---|---|---|---|---|---|
 | Conformance corpus with expected hashes | [✓](https://github.com/aclater/sacdfs/blob/main/tests/corpus.rs) | [✓](https://github.com/aclater/pysacd/blob/master/docs/development.md#the-toc-through-scarletbook) (manual, when the reader changes) | – | [✓](https://github.com/aclater/scarletbook-rs/blob/main/README.md#layout) | [✓](https://github.com/aclater/sacd-spec/blob/main/README.md#using-the-corpus) provides it |
 | Pinned golden output | [✓](https://github.com/aclater/sacdfs/blob/main/CONTRIBUTING.md#ground-rules) DSF and PCM | – | – | – | – |
-| Byte-identical to a reference tool, in CI | – | [✓](https://github.com/aclater/pysacd/blob/master/.github/workflows/ci.yml) `sacd_extract` | – | – | – |
+| Byte-identical to a reference tool, in CI | – | [not working](https://github.com/aclater/pysacd/issues/131) `sacd_extract` | – | – | – |
 | Byte-identical on real discs | [✓](https://github.com/aclater/sacdfs/blob/main/docs/design.md) (manual) | [✓](https://github.com/aclater/pysacd/blob/master/docs/performance.md) (manual) | – | – | – |
 | Correctness gate before a timing | [✓](https://github.com/aclater/sacdfs/blob/main/docs/performance.md#how-these-figures-were-taken) | [✓](https://github.com/aclater/pysacd/blob/master/docs/performance.md) | – | [✓](https://github.com/aclater/scarletbook-rs/blob/main/.github/workflows/release.yml) | [✓](https://github.com/aclater/sacd-spec/blob/main/benchmarks/README.md) defines it |
 
@@ -109,7 +109,7 @@ Short names for the repositories, used in the tables: **sacdfs**
   [docs/pcm-quality.md](https://github.com/aclater/sacdfs/blob/main/docs/pcm-quality.md)).
 - **Against `sacd_extract`:** pysacd's `pysacd-extract` must write the same files, names and
   bytes as `sacd_extract`. CI builds `sacd_extract` from a pinned upstream commit inside the
-  runner and compares (job "compare with sacd_extract"); its code never enters the repository
+  runner and is meant to compare (job "compare with sacd_extract"; it has compared nothing since 0.3.0, see [Known gaps](#known-gaps)); its code never enters the repository
   ([docs/development.md, "CI"](https://github.com/aclater/pysacd/blob/master/docs/development.md#ci)).
 - **Real discs (manual):** a scarletbook update in sacdfs is gated like a release: every track
   of the real test discs must be bit-identical to the reference extractor
@@ -408,6 +408,13 @@ Common to the projects that publish packages; each step links to where it is imp
 
 What isn't covered yet, from open issues and from the checks above:
 
+- **pysacd's comparison with `sacd_extract` has run nothing in CI since 0.3.0.** A change in 0.3.0
+  hid the function the tests use to detect the engine, so they skip and the required job stays
+  green, as do 44 other tests. Releases 0.3.0 to 0.4.3 were not compared in CI. Even before that,
+  CI compared only decoded audio from synthetic images: names, tags and the other output files
+  need real discs. This does not show a byte-identity break; by-hand checks on real discs are
+  recorded for those releases and are being reproduced
+  ([pysacd#131](https://github.com/aclater/pysacd/issues/131)).
 - **pysacd C engine under valgrind:** sacdfs runs its test suite under valgrind memcheck every
   week ([leaks.yml](https://github.com/aclater/sacdfs/blob/main/.github/workflows/leaks.yml)); the
   same for pysacd's C engine is open
