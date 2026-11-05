@@ -11,9 +11,9 @@ its GitHub releases and its milestones; for any detail, they win. Newest first. 
 | Project | Latest release | In progress |
 |---|---|---|
 | [sacdfs](#sacdfs) | 0.4.0 (2026-11-03) | 0.4.1 |
-| [pysacd](#pysacd) | 0.4.3 (2026-11-02) | 0.5.0 |
+| [pysacd](#pysacd) | 0.5.0 (2026-11-05) | nothing recorded |
 | [beets-pysacd](#beets-pysacd) | 0.2.0 (2026-11-02) | nothing recorded |
-| [scarletbook-rs](#scarletbook-rs) | 0.5.7 (2026-11-02) | 0.6.0, then 1.0.0 |
+| [scarletbook-rs](#scarletbook-rs) | 0.5.8 (2026-11-05) | 0.6.0, then 1.0.0 |
 
 To keep this page current, each project's release checklist includes "update aclater/sacd
 RELEASES.md".
@@ -125,9 +125,19 @@ Releases: [0.1.0](https://github.com/aclater/sacdfs/releases/tag/v0.1.0) (2026-1
 
 ## pysacd
 
-### In progress: 0.5.0
+### 0.5 line
 
-Milestone 0.5.0: performance, pysacd's own pipeline around scarletbook. No unreleased entries yet.
+Trust in what shipped: the comparison with `sacd_extract` works in CI again.
+
+- CI did not compare pysacd with `sacd_extract` for releases 0.3.0 to 0.4.3: a check for the engine
+  looked for a function it no longer exported, so 44 tests skipped in a job that stayed green
+  ([#131](https://github.com/aclater/pysacd/issues/131)). Checked by hand on 5 real discs, 175 runs:
+  no differences from 0.4.3 but the fixed `-P` last line, and none from `sacd_extract` beyond
+  documented exceptions. CI now fails if tests start skipping unexpectedly.
+- CI checks the C engine for leaks ([#122](https://github.com/aclater/pysacd/issues/122)), has an
+  informational benchmark job ([#123](https://github.com/aclater/pysacd/issues/123)) and tests
+  Python 3.15 ([#132](https://github.com/aclater/pysacd/issues/132)).
+- Links scarletbook-rs 0.5.8: output and speed unchanged.
 
 ### 0.4 line
 
@@ -233,6 +243,8 @@ freeze (#39, via 0.6.0 and one consumer cycle) and the patent-hygiene review (#4
 ### 0.5 line
 
 Output API, cancellation, seek hints and faster decoding.
+
+- 0.5.8: seek index loader refuses a form the library never writes; `bench realtime`; corrected benchmark runner; `scarletbook-ffi` on crates.io. Reports no speed change.
 
 - 0.5.0 to 0.5.1: remaining TOC fields through the C interface, cancellable and observable
   long reads, cheaper provisional (cold) seeks.

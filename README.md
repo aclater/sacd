@@ -69,13 +69,12 @@ Full figures: [sacd-spec benchmarks](https://github.com/aclater/sacd-spec/blob/m
 
 ## Roadmap
 
-1. **sacdfs WAV** (in progress): converter, then files, then a real-world pass
-   ([sacdfs#11](https://github.com/aclater/sacdfs/issues/11)).
-2. **Final scarletbook test**, once every scarletbook-rs issue and PR is resolved: correctness on
+1. **sacdfs 0.4.1** (candidate under test): the `verify` safety fix, hidden non-SACD folders, names for
+   discs without text, against the [release test plan](https://github.com/aclater/sacdfs/blob/main/docs/test-plan.md).
+2. **sacdfs 0.5.0:** faster reads through the mount, same-host deployment, on-demand tag lookups.
+3. **scarletbook 0.6.0, then 1.0:** performance, then a frozen interface and the patent-hygiene review.
+4. **Final scarletbook test**, once every scarletbook-rs issue and PR is resolved: correctness on
    all builds, an idle-machine round, a head-to-head of every tool, a whole-library survey.
-3. **scarletbook 1.0** and publication on crates.io.
-4. **pysacd on scarletbook:** pysacd switches its engine to scarletbook through the C ABI.
-5. **Releases** of sacdfs, and of pysacd on the new engine.
 
 ## Quality
 

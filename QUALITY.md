@@ -188,7 +188,7 @@ and the required behaviour for each, so all readers reject the same images the s
 
 - **pysacd** runs its whole test suite, hostile images included, with the C engine built under
   ASan and UBSan, and again under TSan to catch data races in the multithreaded engine. Both are
-  required checks. Leak detection is off in the ASan job (see [Known gaps](#known-gaps)).
+  required checks. The ASan job doesn't detect leaks; a separate engine job runs LeakSanitizer and valgrind memcheck on every pull request ([pysacd#122](https://github.com/aclater/pysacd/issues/122)).
 - **scarletbook** runs its tests under Miri (a slice on changes, in full nightly), the C
   interface tests and the C smoke test under LeakSanitizer on every code change, a test that
   memory does not grow over many open, seek, decode and close cycles, and a weekly one-hour
@@ -260,13 +260,13 @@ with no bypass actors:
 | Rule | sacdfs | pysacd | beets | scarletbook | spec | sacd |
 |---|---|---|---|---|---|---|
 | Default branch: changes only by pull request, no force-push, no deletion | [✓](https://github.com/aclater/sacdfs/rules) | [✓](https://github.com/aclater/pysacd/rules) | [✓](https://github.com/aclater/beets-pysacd/rules) | [✓](https://github.com/aclater/scarletbook-rs/rules) | [✓](https://github.com/aclater/sacd-spec/rules) | [✓](https://github.com/aclater/sacd/rules) |
-| Required status checks | [✓](https://github.com/aclater/sacdfs/rules) 11 | [✓](https://github.com/aclater/pysacd/rules) 13 | [✓](https://github.com/aclater/beets-pysacd/rules) 13 | [✓](https://github.com/aclater/scarletbook-rs/rules) 7 | – | – |
+| Required status checks | [✓](https://github.com/aclater/sacdfs/rules) 11 | [✓](https://github.com/aclater/pysacd/rules) 15 | [✓](https://github.com/aclater/beets-pysacd/rules) 13 | [✓](https://github.com/aclater/scarletbook-rs/rules) 7 | – | – |
 | Branch must be up to date with the default branch before merging | [✓](https://github.com/aclater/sacdfs/rules) | [✓](https://github.com/aclater/pysacd/rules) | [✓](https://github.com/aclater/beets-pysacd/rules) | [✓](https://github.com/aclater/scarletbook-rs/rules) | – | – |
 | `v*` tags immutable (no update, deletion or force-push) | [✓](https://github.com/aclater/sacdfs/rules) | [✓](https://github.com/aclater/pysacd/rules) | [✓](https://github.com/aclater/beets-pysacd/rules) | [✓](https://github.com/aclater/scarletbook-rs/rules) | [✓](https://github.com/aclater/sacd-spec/rules) | [✓](https://github.com/aclater/sacd/rules) |
 
 - **The required checks** are, in sacdfs: fmt + clippy, tests, MSRV, cargo-deny, dependency
   review, CodeQL (Rust, Actions), coverage, the container share test on x86-64 and arm64, and the
-  NFS export test. In pysacd: lint and tests on Python 3.11–3.14, ASan + UBSan, TSan, the
+  NFS export test. In pysacd: lint and tests on Python 3.11–3.15, ASan + UBSan, TSan, the engine leak check, the
   `sacd_extract` comparison, the private-names check, CodeQL (Python, C, Actions), semgrep and
   scarletbook provenance. In beets-pysacd: lint, the private-details check, CodeQL, semgrep and
   eight test legs across systems, Python, beets and pysacd versions. In scarletbook: lint, tests,
@@ -414,19 +414,9 @@ Common to the projects that publish packages; each step links to where it is imp
 
 What isn't covered yet, from open issues and from the checks above:
 
-- **pysacd C engine under valgrind:** sacdfs runs its test suite under valgrind memcheck every
-  week ([leaks.yml](https://github.com/aclater/sacdfs/blob/main/.github/workflows/leaks.yml)); the
-  same for pysacd's C engine is open
-  ([pysacd#122](https://github.com/aclater/pysacd/issues/122)).
-- **pysacd leak detection:** the ASan job runs with `detect_leaks=0`
-  ([ci.yml](https://github.com/aclater/pysacd/blob/master/.github/workflows/ci.yml)), so leaks in
-  the C engine are not checked in CI ([pysacd#122](https://github.com/aclater/pysacd/issues/122)).
 - **sacdfs fuzzing:** sacdfs has no fuzz target of its own; it relies on scarletbook's fuzzing
   and on the 103 malformed corpus cases ([sacdfs#161](https://github.com/aclater/sacdfs/issues/161)).
-- **Benchmark regressions** are caught in CI only for scarletbook, and there only as an
-  informational check. The other projects compare timings by hand
-  ([sacdfs#162](https://github.com/aclater/sacdfs/issues/162),
-  [pysacd#123](https://github.com/aclater/pysacd/issues/123)).
+- **Benchmark regressions** are caught in CI only as an informational check, in scarletbook, sacdfs and pysacd; timings are still compared by hand at release.
 - **pysacd's PS3 client** is untested on real hardware
   ([pysacd#10](https://github.com/aclater/pysacd/issues/10)).
 - **scarletbook-rs before 1.0** (its own public issues): interface stability for integration
