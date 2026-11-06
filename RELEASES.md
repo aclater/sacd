@@ -78,8 +78,65 @@ with SELinux enforcing, five music servers and a 2-hour soak on real discs.
 
 Tested as two release candidates, with a new [release test plan](https://github.com/aclater/sacdfs/blob/main/docs/test-plan.md):
 Roon and Plex on a whole library, five scripted servers against 0.4.0, Windows 11, foobar2000,
-JRiver Media Center, Linux NFS and SMB clients and the FFmpeg family of tools (rc.1); rc.2 gate:
-TBD-GATE.
+JRiver Media Center, Linux NFS and SMB clients and the FFmpeg family of tools (rc.1); the rc.2 gate:
+
+- Memory on a real library of 4,902 DSF files (32-core machine), listed / after a head-and-tail
+  read of every file / 10 minutes idle: 0.4.0 29.0 / 79.5 / 35.2 MiB, rc.1 33.2 / 95.1 / 54.0,
+  rc.2 27.2 / 72.7 / 33.0.
+- Whole-library mount (warm NFS, fresh index cache, medians of 5 alternating rounds): 0.4.0 5.00 s,
+  rc.1 0.76 s, rc.2 1.02 s. First listing 1.55 / 1.36 / 1.42 s. rc.2 is about 0.26 s slower than
+  rc.1 (accepted; the arena limit is the suspected cause, not confirmed). Cold-cache mount not
+  measured on rc.2.
+- 60-minute soak passed: 224,491 reads, 686 GB, 0 unexpected errors, 19 stalls, 11 remounts, memory
+  +1.4 MiB/h. 2-hour soak: TBD-GATE.
+- SMB 3.1.1 and NFS 4.2 listings correct, 10 files byte-identical over both, writes refused, SMB
+  reconnects after a restart. `SACDFS_MOUNT_TIMEOUT` and the health check pass on the rc.2 image
+  under Docker and rootful Podman (`docker compose` not run).
+- Upgrade rc.1 to rc.2 on the NAS apps: identical names and counts, no re-read seen for 12 minutes.
+- Not verified: the arm64 image at run time, a cold-cache mount.
+
+Known limit: an existing NFS mount gets "Stale file handle" after a container restart under rootful
+Podman ([#218](https://github.com/aclater/sacdfs/issues/218)); the fix is planned for 0.5.0
+([#221](https://github.com/aclater/sacdfs/pull/221)).
+
+**Quality scorecard, 0.4.1** (first one; facts only, no score).
+
+1. *Bugs that escaped 0.4.0, and the check that should have caught them.* The severity is this
+   page's reading of each issue's text, not a label from the issues.
+
+   | Issue | What | Severity | Fixed in 0.4.1 | Check that should have caught it |
+   |---|---|---|---|---|
+   | [#196](https://github.com/aclater/sacdfs/issues/196) | `verify` exited 0 after a worker panic, with that file missing from the report | High: false success, and users delete extracts on `verify`'s word | Yes | Fuzzing of the `verify` readers and an error-path test (found by the new fuzz targets) |
+   | [#198](https://github.com/aclater/sacdfs/issues/198) | `tags import` exited 0 when files failed | Low: scripting only, nothing is deleted on its word | Yes | A test of each exit code |
+   | [#202](https://github.com/aclater/sacdfs/issues/202) | `verify -o /dev/stdout` redirected to a file failed | Low. The issue says the failing form was introduced on main by the #196 fix, before the release; the changelog says 0.4.0 wrote the rows and then exited 1. So not an escape of the same kind | Yes | A test with stdout redirected to a regular file (the pipe case was tested) |
+   | [#204](https://github.com/aclater/sacdfs/issues/204) | One SMB 3 client drops the mount after a sacdfs restart of about 8 s (2 of 2 tries) | Medium for that client; remounting works. Not classified further: the cause is unknown | No: open | The test plan's restart check on every client (the plan is new) |
+   | [#217](https://github.com/aclater/sacdfs/issues/217) | The SMB share does not advertise read-only and looks 100 % full | Low: cosmetic, writes are refused cleanly. The issue says it is not a regression | No: open | A check of what file managers show |
+   | [#218](https://github.com/aclater/sacdfs/issues/218) | NFSv4 clients get "Stale file handle" after a Podman restart (Docker keeps them) | Medium: the docs said otherwise | No: documented as a known limit, fix planned for 0.5.0 | A restart test against the container's own NFS server; CI used the kernel's server over NFSv3 |
+   | [#232](https://github.com/aclater/sacdfs/issues/232) | The container gave up after 60 s mounting a large library on a slow disk | Medium: the container exits and does not start | Yes (`SACDFS_MOUNT_TIMEOUT`) | A large-library, slow-disk test (the 122,676-file case was an emulated disk) |
+
+2. *Wrong data.* Checked: copies over SMB were byte-identical to the served files (186 of 186 audio
+   files on Windows in rc.1); DSF and WAV files from the 136-image corpus and five bench discs hash the same as
+   with 0.4.0 after the scarletbook 0.5.8 move; on rc.2, 10 files were byte-identical over SMB 3.1.1
+   and NFS 4.2; a tree comparison of the whole library against 0.4.0 found only the announced
+   changes (names and tags of discs without text, added cover images, hidden folders with no audio).
+   Result: no wrong audio or wrong data was found. Not covered: Japanese, Chinese and Korean disc
+   text, and the other layouts listed in the test plan.
+
+3. *Regressions against 0.4.0.* Memory after a full read is lower (72.7 against 79.5 MiB on the
+   gate library) after rc.1's rise to 95.1 was fixed ([#224](https://github.com/aclater/sacdfs/pull/224)).
+   The whole-library mount is faster (1.02 against 5.00 s warm), though 0.26 s slower than rc.1.
+   Straight reads through the mount were unchanged within noise on the corpus (DST stereo DSF 8.75
+   to 8.72 s; plain-DSD DSF 2.83 to 2.55 s; medians of 11). Jellyfin's loudness scan was 6 % slower on rc.1
+   (508 s against 478 s, one run each, not repeated on rc.2). A scanner sees one-time changes on
+   upgrade (listed in the upgrade notes). Cold-cache mount time was not measured on rc.2.
+
+4. *Gaps.* No physical Windows client (Windows 11 ran in VMs; a Robocopy speed difference of 3.3x
+   between two modes is unexplained, [#225](https://github.com/aclater/sacdfs/issues/225)); no
+   real N100-class hardware (small-NAS sizing was measured on limited containers); cold-cache mount;
+   the arm64 image at run time; the compose file (`docker compose` not run); the 2-hour soak
+   (TBD-GATE) and the coverage gaps listed in the
+   [test plan](https://github.com/aclater/sacdfs/blob/main/docs/test-plan.md) (Kodi, Gerbera, Strawberry, Sonos, phones and
+   streamers, macOS Finder and players, discs with unusual layouts).
 
 Releases: [0.4.1](https://github.com/aclater/sacdfs/releases/tag/v0.4.1) (2026-11-06),
 [0.4.0](https://github.com/aclater/sacdfs/releases/tag/v0.4.0) (2026-11-03).
