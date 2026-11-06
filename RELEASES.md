@@ -69,6 +69,11 @@ with SELinux enforcing, five music servers and a 2-hour soak on real discs.
 - MPD finds folder art ([#148](https://github.com/aclater/sacdfs/issues/148)).
 - Container: `SACDFS_MOUNT_TIMEOUT` (default 300 s) for large libraries on slow disks
   ([#232](https://github.com/aclater/sacdfs/issues/232)); a "Small NAS: sizing" guide.
+- A hung image's WAV reads no longer take decoder threads from other images, so reads of healthy
+  discs no longer stall and fail with `EIO` while one source hangs
+  ([#238](https://github.com/aclater/sacdfs/issues/238); present in 0.4.0 too; audio bytes unchanged).
+  Known limit: a long hang with clients that keep retrying can still use every read thread of the
+  mount ([#241](https://github.com/aclater/sacdfs/issues/241), planned for 0.5.0).
 - Memory after the start-up walk is back to 0.4.0's
   ([#224](https://github.com/aclater/sacdfs/pull/224)).
 - scarletbook 0.5.8; fuzz targets, an informational benchmark job, a fairer soak thread check
@@ -76,9 +81,9 @@ with SELinux enforcing, five music servers and a 2-hour soak on real discs.
   [#162](https://github.com/aclater/sacdfs/issues/162),
   [#179](https://github.com/aclater/sacdfs/issues/179)).
 
-Tested as two release candidates, with a new [release test plan](https://github.com/aclater/sacdfs/blob/main/docs/test-plan.md):
+Tested as three release candidates, with a new [release test plan](https://github.com/aclater/sacdfs/blob/main/docs/test-plan.md):
 Roon and Plex on a whole library, five scripted servers against 0.4.0, Windows 11, foobar2000,
-JRiver Media Center, Linux NFS and SMB clients and the FFmpeg family of tools (rc.1); the rc.2 gate:
+JRiver Media Center, Linux NFS and SMB clients and the FFmpeg family of tools (rc.1); the rc.2 gate; rc.3 then added the #238 fix:
 
 - Memory on a real library of 4,902 DSF files (32-core machine), listed / after a head-and-tail
   read of every file / 10 minutes idle: 0.4.0 29.0 / 79.5 / 35.2 MiB, rc.1 33.2 / 95.1 / 54.0,
@@ -88,7 +93,7 @@ JRiver Media Center, Linux NFS and SMB clients and the FFmpeg family of tools (r
   rc.1 (accepted; the arena limit is the suspected cause, not confirmed). Cold-cache mount not
   measured on rc.2.
 - 60-minute soak passed: 224,491 reads, 686 GB, 0 unexpected errors, 19 stalls, 11 remounts, memory
-  +1.4 MiB/h. 2-hour soak: TBD-GATE.
+  +1.4 MiB/h. The 2-hour soak on rc.2 failed on #238, which rc.3 fixes. 2-hour soak on rc.3: TBD-GATE.
 - SMB 3.1.1 and NFS 4.2 listings correct, 10 files byte-identical over both, writes refused, SMB
   reconnects after a restart. `SACDFS_MOUNT_TIMEOUT` and the health check pass on the rc.2 image
   under Docker and rootful Podman (`docker compose` not run).
@@ -133,8 +138,8 @@ Podman ([#218](https://github.com/aclater/sacdfs/issues/218)); the fix is planne
 4. *Gaps.* No physical Windows client (Windows 11 ran in VMs; a Robocopy speed difference of 3.3x
    between two modes is unexplained, [#225](https://github.com/aclater/sacdfs/issues/225)); no
    real N100-class hardware (small-NAS sizing was measured on limited containers); cold-cache mount;
-   the arm64 image at run time; the compose file (`docker compose` not run); the 2-hour soak
-   (TBD-GATE) and the coverage gaps listed in the
+   the arm64 image at run time; the compose file (`docker compose` not run); the 2-hour soak on rc.3
+   (TBD-GATE; no soak covers a long hang with retrying clients, #241) and the coverage gaps listed in the
    [test plan](https://github.com/aclater/sacdfs/blob/main/docs/test-plan.md) (Kodi, Gerbera, Strawberry, Sonos, phones and
    streamers, macOS Finder and players, discs with unusual layouts).
 
