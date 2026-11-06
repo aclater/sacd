@@ -117,8 +117,8 @@ Podman ([#218](https://github.com/aclater/sacdfs/issues/218)); the fix is planne
 2. *Wrong data.* Checked: copies over SMB were byte-identical to the served files (186 of 186 audio
    files on Windows in rc.1); DSF and WAV files from the 136-image corpus and five bench discs hash the same as
    with 0.4.0 after the scarletbook 0.5.8 move; on rc.2, 10 files were byte-identical over SMB 3.1.1
-   and NFS 4.2; a tree comparison of the whole library against 0.4.0 found only the announced
-   changes (names and tags of discs without text, added cover images, hidden folders with no audio).
+   and NFS 4.2; a tree comparison of the whole library against 0.4.0 found the changes listed in the upgrade notes
+   (names and tags of discs without text, added cover images, hidden folders with no audio).
    Result: no wrong audio or wrong data was found. Not covered: Japanese, Chinese and Korean disc
    text, and the other layouts listed in the test plan.
 
