@@ -6,11 +6,11 @@ step: it may change behaviour, and a patch release only adds or fixes.
 
 This page summarises public release notes only. The sources are each project's `CHANGELOG.md`,
 its GitHub releases and its milestones; for any detail, they win. Newest first. Last updated
-2026-11-02.
+2026-11-06.
 
 | Project | Latest release | In progress |
 |---|---|---|
-| [sacdfs](#sacdfs) | 0.4.0 (2026-11-03) | 0.4.1 |
+| [sacdfs](#sacdfs) | 0.4.1 (2026-11-06) | 0.5.0 |
 | [pysacd](#pysacd) | 0.5.0 (2026-11-05) | nothing recorded |
 | [beets-pysacd](#beets-pysacd) | 0.2.0 (2026-11-02) | nothing recorded |
 | [scarletbook-rs](#scarletbook-rs) | 0.5.8 (2026-11-05) | 0.6.0, then 1.0.0 |
@@ -20,12 +20,9 @@ RELEASES.md".
 
 ## sacdfs
 
-### In progress: 0.4.1
+### In progress: 0.5.0
 
-Milestone 0.4.1: cover.jpg for MPD ([#148](https://github.com/aclater/sacdfs/issues/148)), sacdfs's
-own fuzz targets ([#161](https://github.com/aclater/sacdfs/issues/161)), an informational benchmark
-job ([#162](https://github.com/aclater/sacdfs/issues/162)) and a fairer soak thread check
-([#179](https://github.com/aclater/sacdfs/issues/179)).
+Planned (from the roadmap): faster reads through the mount, same-host deployment and on-demand tag lookups.
 
 ### 0.4 line
 
@@ -58,7 +55,34 @@ Memory and leaks, and crates.io.
 Tested as five release candidates on a TrueNAS SCALE NAS with Roon and Plex, a Fedora NFS client
 with SELinux enforcing, five music servers and a 2-hour soak on real discs.
 
-Releases: [0.4.0](https://github.com/aclater/sacdfs/releases/tag/v0.4.0) (2026-11-03).
+**0.4.1** (patch release; it adds and fixes, and a scanner sees one-time changes on upgrade):
+
+- `sacdfs verify` no longer exits 0 with files unchecked after a worker panic, and a stopped run
+  leaves no report that looks finished ([#196](https://github.com/aclater/sacdfs/issues/196));
+  `sacdfs tags import` exits 2 when some extracts weren't imported
+  ([#198](https://github.com/aclater/sacdfs/issues/198)).
+- Folders with no SACD image are hidden, art included
+  ([#175](https://github.com/aclater/sacdfs/issues/175)).
+- Discs without text get names and tags with no network: `Track NN`, and album and artist from the
+  image's path ([#185](https://github.com/aclater/sacdfs/issues/185), phase 1). Files of such
+  discs change once.
+- MPD finds folder art ([#148](https://github.com/aclater/sacdfs/issues/148)).
+- Container: `SACDFS_MOUNT_TIMEOUT` (default 300 s) for large libraries on slow disks
+  ([#232](https://github.com/aclater/sacdfs/issues/232)); a "Small NAS: sizing" guide.
+- Memory after the start-up walk is back to 0.4.0's
+  ([#224](https://github.com/aclater/sacdfs/pull/224)).
+- scarletbook 0.5.8; fuzz targets, an informational benchmark job, a fairer soak thread check
+  ([#161](https://github.com/aclater/sacdfs/issues/161),
+  [#162](https://github.com/aclater/sacdfs/issues/162),
+  [#179](https://github.com/aclater/sacdfs/issues/179)).
+
+Tested as two release candidates, with a new [release test plan](https://github.com/aclater/sacdfs/blob/main/docs/test-plan.md):
+Roon and Plex on a whole library, five scripted servers against 0.4.0, Windows 11, foobar2000,
+JRiver Media Center, Linux NFS and SMB clients and the FFmpeg family of tools (rc.1); rc.2 gate:
+TBD-GATE.
+
+Releases: [0.4.1](https://github.com/aclater/sacdfs/releases/tag/v0.4.1) (2026-11-06),
+[0.4.0](https://github.com/aclater/sacdfs/releases/tag/v0.4.0) (2026-11-03).
 
 ### 0.3 line
 
