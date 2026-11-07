@@ -6,11 +6,11 @@ step: it may change behaviour, and a patch release only adds or fixes.
 
 This page summarises public release notes only. The sources are each project's `CHANGELOG.md`,
 its GitHub releases and its milestones; for any detail, they win. Newest first. Last updated
-2026-11-06.
+2026-11-07.
 
 | Project | Latest release | In progress |
 |---|---|---|
-| [sacdfs](#sacdfs) | 0.4.1 (2026-11-06) | 0.5.0 |
+| [sacdfs](#sacdfs) | 0.4.1 (2026-11-07) | 0.5.0 |
 | [pysacd](#pysacd) | 0.5.0 (2026-11-05) | nothing recorded |
 | [beets-pysacd](#beets-pysacd) | 0.2.0 (2026-11-02) | nothing recorded |
 | [scarletbook-rs](#scarletbook-rs) | 0.5.8 (2026-11-05) | 0.6.0, then 1.0.0 |
