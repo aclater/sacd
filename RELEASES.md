@@ -93,7 +93,7 @@ JRiver Media Center, Linux NFS and SMB clients and the FFmpeg family of tools (r
   rc.1 (accepted; the arena limit is the suspected cause, not confirmed). Cold-cache mount not
   measured on rc.2.
 - 60-minute soak passed: 224,491 reads, 686 GB, 0 unexpected errors, 19 stalls, 11 remounts, memory
-  +1.4 MiB/h. The 2-hour soak on rc.2 failed on #238, which rc.3 fixes. 2-hour soak on rc.3: TBD-GATE.
+  +1.4 MiB/h. The 2-hour soak on rc.2 failed on #238, which rc.3 fixes. On rc.3, every soak had 0 unexpected errors (rc.2 beside it: 0 to 14). Two 2-hour runs on one machine failed the memory trend check on single steps (+8.02 and +8.90 MiB/h, limit 4.4); 6- and 8-hour runs passed, flat at +0.08 and +1.14 MiB/h. The cause of the steps is unknown ([#247](https://github.com/aclater/sacdfs/issues/247)).
 - SMB 3.1.1 and NFS 4.2 listings correct, 10 files byte-identical over both, writes refused, SMB
   reconnects after a restart. `SACDFS_MOUNT_TIMEOUT` and the health check pass on the rc.2 image
   under Docker and rootful Podman (`docker compose` not run).
@@ -138,12 +138,12 @@ Podman ([#218](https://github.com/aclater/sacdfs/issues/218)); the fix is planne
 4. *Gaps.* No physical Windows client (Windows 11 ran in VMs; a Robocopy speed difference of 3.3x
    between two modes is unexplained, [#225](https://github.com/aclater/sacdfs/issues/225)); no
    real N100-class hardware (small-NAS sizing was measured on limited containers); cold-cache mount;
-   the arm64 image at run time; the compose file (`docker compose` not run); the 2-hour soak on rc.3
-   (TBD-GATE; no soak covers a long hang with retrying clients, #241) and the coverage gaps listed in the
+   the arm64 image at run time; the compose file (`docker compose` not run); what the rc.3 soak's memory steps are
+   (#247); a long hang with retrying clients, which no soak covers (#241); Jellyfin, Windows and macOS on rc.3, carried over from earlier candidates; and the coverage gaps listed in the
    [test plan](https://github.com/aclater/sacdfs/blob/main/docs/test-plan.md) (Kodi, Gerbera, Strawberry, Sonos, phones and
    streamers, macOS Finder and players, discs with unusual layouts).
 
-Releases: [0.4.1](https://github.com/aclater/sacdfs/releases/tag/v0.4.1) (2026-11-06),
+Releases: [0.4.1](https://github.com/aclater/sacdfs/releases/tag/v0.4.1) (2026-11-07),
 [0.4.0](https://github.com/aclater/sacdfs/releases/tag/v0.4.0) (2026-11-03).
 
 ### 0.3 line
