@@ -69,8 +69,8 @@ Full figures: [sacd-spec benchmarks](https://github.com/aclater/sacd-spec/blob/m
 
 ## Roadmap
 
-1. **sacdfs 0.4.1** (candidate under test): the `verify` safety fix, hidden non-SACD folders, names for
-   discs without text, against the [release test plan](https://github.com/aclater/sacdfs/blob/main/docs/test-plan.md).
+1. **sacdfs 0.4.1** (released 2026-11-06): the `verify` safety fix, hidden non-SACD folders, names for
+   discs without text, tested against the [release test plan](https://github.com/aclater/sacdfs/blob/main/docs/test-plan.md).
 2. **sacdfs 0.5.0:** faster reads through the mount, same-host deployment, on-demand tag lookups.
 3. **scarletbook 0.6.0, then 1.0:** performance, then a frozen interface and the patent-hygiene review.
 4. **Final scarletbook test**, once every scarletbook-rs issue and PR is resolved: correctness on
