@@ -20,9 +20,40 @@ RELEASES.md".
 
 ## sacdfs
 
-### In progress: 0.5.0
+### 0.6 line
 
-Planned (from the roadmap): faster reads through the mount, same-host deployment and on-demand tag lookups.
+NAS deployment: start and stop at boot, one Compose file, plain start-up messages.
+
+**0.6.0** (2026-11-10):
+
+- Safe start and stop for the release binary on a NAS: a systemd unit and a `sacdfs-ctl` script for
+  systems without systemd, now shipped in the release archives
+  ([#289](https://github.com/aclater/sacdfs/issues/289)). Start at boot was checked on QNAP, ASUSTOR,
+  Synology, TerraMaster and ReadyNAS systems in VMs.
+- One Compose file for every NAS container manager
+  ([#283](https://github.com/aclater/sacdfs/issues/283)); Unraid and TrueNAS app-store entries
+  prepared, not yet submitted ([#284](https://github.com/aclater/sacdfs/issues/284)).
+- Plain start-up messages and checks for NAS users, and root's mount is readable by other users
+  ([#282](https://github.com/aclater/sacdfs/issues/282)).
+- Directory listings over SMB cost sacdfs about a third fewer requests
+  ([#205](https://github.com/aclater/sacdfs/issues/205)).
+- Strict real-disc tests that run in the release gate
+  ([#220](https://github.com/aclater/sacdfs/issues/220)).
+
+Tested as one release candidate: five music servers and NFS and SMB clients on seven Linux
+distributions, Windows 11 and macOS in VMs, real discs, a whole-library comparison with 0.5.0 and a
+2-hour soak on two machines, with no regression against 0.5.0.
+
+### 0.5 line
+
+**0.5.0** (2026-11-08): faster DST reads through the mount
+([#210](https://github.com/aclater/sacdfs/issues/210)); players on the same host read the mount
+directly ([#186](https://github.com/aclater/sacdfs/issues/186)); MusicBrainz tags on demand and an
+optional background lookup ([#185](https://github.com/aclater/sacdfs/issues/185)); sacdfs no longer
+gets killed listing under a memory limit ([#237](https://github.com/aclater/sacdfs/issues/237)); release
+binaries for glibc 2.17 and aarch64 ([#244](https://github.com/aclater/sacdfs/issues/244)); a
+read-only share with the right sizes ([#217](https://github.com/aclater/sacdfs/issues/217)).
+Tested as one release candidate against 0.4.1.
 
 ### 0.4 line
 
