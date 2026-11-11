@@ -6,11 +6,11 @@ step: it may change behaviour, and a patch release only adds or fixes.
 
 This page summarises public release notes only. The sources are each project's `CHANGELOG.md`,
 its GitHub releases and its milestones; for any detail, they win. Newest first. Last updated
-2026-11-07.
+2026-11-11.
 
 | Project | Latest release | In progress |
 |---|---|---|
-| [sacdfs](#sacdfs) | 0.4.1 (2026-11-07) | 0.5.0 |
+| [sacdfs](#sacdfs) | 0.6.1 (2026-11-11) | nothing recorded |
 | [pysacd](#pysacd) | 0.5.0 (2026-11-05) | nothing recorded |
 | [beets-pysacd](#beets-pysacd) | 0.2.0 (2026-11-02) | nothing recorded |
 | [scarletbook-rs](#scarletbook-rs) | 0.5.8 (2026-11-05) | 0.6.0, then 1.0.0 |
@@ -23,6 +23,22 @@ RELEASES.md".
 ### 0.6 line
 
 NAS deployment: start and stop at boot, one Compose file, plain start-up messages.
+
+**0.6.1** (2026-11-11):
+
+- On SIGTERM, sacdfs now exits after a grace period even while clients hold files open
+  (`--stop-grace`, 10 s by default; [#276](https://github.com/aclater/sacdfs/issues/276)), so a
+  service manager's stop no longer waits for ever.
+- DST areas read faster on one thread: scarletbook is built in one codegen unit
+  ([#270](https://github.com/aclater/sacdfs/issues/270)).
+- Simpler install guides for players and NAS systems
+  ([#310](https://github.com/aclater/sacdfs/issues/310)), and notes on SMB client settings
+  ([#266](https://github.com/aclater/sacdfs/issues/266), [#325](https://github.com/aclater/sacdfs/issues/325)).
+- A faster pace for WAV copies over SMB ([#271](https://github.com/aclater/sacdfs/issues/271)) was
+  taken out before the release because it could stall a player beside several starting copies.
+
+Tested on main against 0.6.0: a 2-hour soak on two machines, the stop check, and a player beside
+whole-file copies over SMB.
 
 **0.6.0** (2026-11-10):
 
