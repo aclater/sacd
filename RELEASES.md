@@ -10,7 +10,7 @@ its GitHub releases and its milestones; for any detail, they win. Newest first. 
 
 | Project | Latest release | In progress |
 |---|---|---|
-| [sacdfs](#sacdfs) | 0.6.1 (2026-11-11) | nothing recorded |
+| [sacdfs](#sacdfs) | 0.6.2 (2026-11-11) | nothing recorded |
 | [pysacd](#pysacd) | 0.5.0 (2026-11-05) | nothing recorded |
 | [beets-pysacd](#beets-pysacd) | 0.2.0 (2026-11-02) | nothing recorded |
 | [scarletbook-rs](#scarletbook-rs) | 0.5.8 (2026-11-05) | 0.6.0, then 1.0.0 |
@@ -23,6 +23,24 @@ RELEASES.md".
 ### 0.6 line
 
 NAS deployment: start and stop at boot, one Compose file, plain start-up messages.
+
+**0.6.2** (2026-11-11):
+
+- An installer: one `curl ... | sh` line finds out what it runs on (Synology, QNAP, ASUSTOR,
+  TerraMaster, UGREEN, ReadyNAS, OpenMediaVault or plain Linux) and sets sacdfs up the way that
+  system's guide does ([#340](https://github.com/aclater/sacdfs/issues/340)).
+- WAV copies over SMB are paced so a player beside them keeps its reads short, and a single copy is
+  faster again ([#271](https://github.com/aclater/sacdfs/issues/271)). On a server too slow to decode
+  several copies at real time, a player beside four copies stalls longer than on 0.6.1
+  ([#357](https://github.com/aclater/sacdfs/issues/357)).
+- sacdfs exits after an outside unmount ([#322](https://github.com/aclater/sacdfs/issues/322)), and a
+  stop signal during start-up is no longer lost ([#334](https://github.com/aclater/sacdfs/issues/334)).
+- The core is split from the FUSE layer, a first step towards Windows support
+  ([#22](https://github.com/aclater/sacdfs/issues/22)); no behaviour change.
+
+Tested as 0.6.2-rc.1 against 0.6.1: a 2-hour soak on two machines, stop checks, release artifacts,
+the installer on Linux and on Synology and QNAP in VMs, Tier 1 media servers, seven Linux client
+distributions, Windows 11 in a VM, and a player beside copies over SMB and NFS. macOS was not run.
 
 **0.6.1** (2026-11-11):
 
