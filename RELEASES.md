@@ -10,7 +10,7 @@ its GitHub releases and its milestones; for any detail, they win. Newest first. 
 
 | Project | Latest release | In progress |
 |---|---|---|
-| [sacdfs](#sacdfs) | 0.6.2 (2026-11-11) | nothing recorded |
+| [sacdfs](#sacdfs) | 0.6.3 (2026-11-13) | nothing recorded |
 | [pysacd](#pysacd) | 0.5.0 (2026-11-05) | nothing recorded |
 | [beets-pysacd](#beets-pysacd) | 0.2.0 (2026-11-02) | nothing recorded |
 | [scarletbook-rs](#scarletbook-rs) | 0.5.8 (2026-11-05) | 0.6.0, then 1.0.0 |
@@ -23,6 +23,23 @@ RELEASES.md".
 ### 0.6 line
 
 NAS deployment: start and stop at boot, one Compose file, plain start-up messages.
+
+**0.6.3** (2026-11-13):
+
+- A player beside four copies on a server too slow to decode them all at real time stalls far
+  less than on 0.6.2 or 0.6.1: in the gate, worst read 3.4 s on 2 slow cores over SMB against
+  12.3 s and 7.7 s ([#357](https://github.com/aclater/sacdfs/issues/357)). A second player starting
+  beside copies is slower to start than on 0.6.2 ([#363](https://github.com/aclater/sacdfs/issues/363)).
+- The installer fails loudly on a download cut short ([#352](https://github.com/aclater/sacdfs/issues/352)),
+  switches QNAP's autorun back off on uninstall ([#353](https://github.com/aclater/sacdfs/issues/353)),
+  and stops at once on a system other than Linux.
+- The docs advise `rsize=262144` on Linux SMB mounts: a tag scan then costs about a seventh of the
+  server CPU ([#266](https://github.com/aclater/sacdfs/issues/266)).
+
+Tested as 0.6.3-rc.1 against 0.6.2: a 2-hour soak on two machines, stop checks, release artifacts,
+the installer in containers and on Synology and QNAP in VMs, Tier 1 media servers, seven Linux client
+distributions, a player beside copies over SMB, Windows 11 in a VM and macOS 27.2 in a VM on Apple
+hardware (where a player beside four copies stalls on both releases, [#378](https://github.com/aclater/sacdfs/issues/378)).
 
 **0.6.2** (2026-11-11):
 
