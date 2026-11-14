@@ -49,13 +49,6 @@ Once it's fixed, the issue is published as a GitHub security advisory (with a CV
 warrants one), saying which versions are affected and which release fixes it, and crediting
 you unless you'd rather not be named.
 
-## Safe harbour
-
-Research done in good faith under this policy is welcome, and the maintainer won't take or
-support legal action against you for it. Good faith here means: you test on your own systems
-and with your own images, you don't read, change or delete other people's data, you don't
-degrade a service other people use, and you report what you find privately.
-
 ## How a vulnerability is handled
 
 The same steps apply in every project, whether the vulnerability came from a report or was
