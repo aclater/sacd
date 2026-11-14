@@ -6,13 +6,13 @@ step: it may change behaviour, and a patch release only adds or fixes.
 
 This page summarises public release notes only. The sources are each project's `CHANGELOG.md`,
 its GitHub releases and its milestones; for any detail, they win. Newest first. Last updated
-2026-11-11.
+2026-11-14.
 
 | Project | Latest release | In progress |
 |---|---|---|
 | [sacdfs](#sacdfs) | 0.6.3 (2026-11-13) | nothing recorded |
-| [pysacd](#pysacd) | 0.5.0 (2026-11-05) | nothing recorded |
-| [beets-pysacd](#beets-pysacd) | 0.2.0 (2026-11-02) | nothing recorded |
+| [pysacd](#pysacd) | 0.5.1 (2026-11-14) | nothing recorded |
+| [beets-pysacd](#beets-pysacd) | 0.2.1 (2026-11-14) | nothing recorded |
 | [scarletbook-rs](#scarletbook-rs) | 0.5.8 (2026-11-05) | 0.6.0, then 1.0.0 |
 
 To keep this page current, each project's release checklist includes "update aclater/sacd
@@ -297,6 +297,28 @@ Releases: [0.1.0](https://github.com/aclater/sacdfs/releases/tag/v0.1.0) (2026-1
 
 Trust in what shipped: the comparison with `sacd_extract` works in CI again.
 
+- **0.5.1 is a security release** ([notes](https://github.com/aclater/pysacd/releases/tag/v0.5.1)).
+  A private review of 0.5.0 found three problems a crafted disc image can trigger, each with a
+  published advisory: output placed outside the output folder
+  ([GHSA-gx45-h8q4-vwmc](https://github.com/aclater/pysacd/security/advisories/GHSA-gx45-h8q4-vwmc)),
+  one disc replacing another disc's files without a warning
+  ([GHSA-whv9-98xg-4xw9](https://github.com/aclater/pysacd/security/advisories/GHSA-whv9-98xg-4xw9)),
+  and a small image producing very large output
+  ([GHSA-q45f-7qmf-37x3](https://github.com/aclater/pysacd/security/advisories/GHSA-q45f-7qmf-37x3)).
+  Smaller findings on network requests, credentials and output handling are fixed with them.
+  Upgrade if you convert images you did not rip yourself.
+  - Changed defaults: a run stops when it would write mostly silence or filler for audio the image
+    lacks (more than 10 seconds beyond the audio found; `--allow-silence` gives the old behaviour
+    for a run), and `pysacd-extract --templates` keeps files that exist (`--overwrite` replaces
+    them). Engine ABI 7.
+  - Output for ordinary discs is unchanged: 0.5.0 against 0.5.1 on three real discs in 35 modes
+    (105 runs), no difference, and none from `sacd_extract` beyond documented exceptions.
+  - Also in 0.5.1: Python 3.10 again and the engine builds with GCC 11
+    ([#140](https://github.com/aclater/pysacd/issues/140)); macOS wheels for macOS 11 (arm64) and
+    10.13 (x86-64) ([#142](https://github.com/aclater/pysacd/issues/142); not yet run on a macOS
+    older than 15); scarletbook-rs 0.5.9 linked; one worker thread for plain DSD to DSF or DSDIFF
+    ([#137](https://github.com/aclater/pysacd/issues/137)); CI builds and tests in Fedora and UBI
+    containers ([#144](https://github.com/aclater/pysacd/issues/144)).
 - CI did not compare pysacd with `sacd_extract` for releases 0.3.0 to 0.4.3: a check for the engine
   looked for a function it no longer exported, so 44 tests skipped in a job that stayed green
   ([#131](https://github.com/aclater/pysacd/issues/131)). Checked by hand on 5 real discs, 175 runs:
@@ -373,6 +395,13 @@ No unreleased entries in `CHANGELOG.md` and no open milestone at the time of wri
 
 Catalogue SACD images in place of deleted extracts, for sacdfs storage reclamation.
 
+- **0.2.1 is a security release** ([notes](https://github.com/aclater/beets-pysacd/releases/tag/v0.2.1))
+  for users of `remove_iso` (off by default): an image could be deleted without having been
+  imported, because "already in the library" is decided by a fingerprint of the TOCs and the size,
+  not the audio
+  ([GHSA-mjx6-hpg7-mjqj](https://github.com/aclater/beets-pysacd/security/advisories/GHSA-mjx6-hpg7-mjqj)).
+  Now an image is removed only when every selected area was imported from it in that run and its
+  own album verified; anything else keeps the image and says why.
 - New `beet sacd-migrate`: finds library albums that are extracts of an ISO and records the
   ISO, track and sacdfs path of each; report-only unless `--apply`, never deletes files.
   `--verify REPORT` accepts only albums whose extracts `sacdfs verify` found IDENTICAL or
