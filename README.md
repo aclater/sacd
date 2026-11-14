@@ -81,6 +81,11 @@ Full figures: [sacd-spec benchmarks](https://github.com/aclater/sacd-spec/blob/m
 Every check the projects run against bugs, regressions, leaks, supply-chain problems and bad
 releases, with links to where each is implemented, and the known gaps: [QUALITY.md](QUALITY.md).
 
+## Security
+
+Where to report a vulnerability in any of the projects, what to expect, and how reports are
+handled: [SECURITY.md](SECURITY.md). Please report privately, never in a public issue.
+
 ## Releases
 
 What each minor version line brought, per project, newest first: [RELEASES.md](RELEASES.md).
