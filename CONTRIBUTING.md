@@ -32,3 +32,9 @@ each issue.
    `Closes #N` only if it fully resolves the issue, else `Part of #N`.
 4. Don't start on an issue that someone else has claimed. Ask on the issue instead.
 
+## Security findings
+
+None of the above applies to a vulnerability. If you find one, in any of the projects, don't
+open an issue or a pull request for it, don't claim it in public and don't describe it in a
+commit message or a branch name. Open a draft advisory in the project's repository and follow
+[How a vulnerability is handled](SECURITY.md#how-a-vulnerability-is-handled).
